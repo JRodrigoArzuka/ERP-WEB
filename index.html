@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -39,13 +40,13 @@
                 <span class="spinner-border spinner-border-sm"></span> Iniciando...
             </small>
         </div>
+        
         <div class="text-center mt-3 mb-2">
             <div class="small text-white-50">Conectado como:</div>
             <div id="lblUsuarioActual" class="fw-bold text-white small">Cargando...</div>
         </div>
 
         <div class="accordion accordion-flush bg-transparent" id="menuAccordion">
-            
             <div class="accordion-item bg-transparent border-0">
                 <h2 class="accordion-header">
                     <button class="accordion-button bg-transparent text-white shadow-none" type="button" onclick="nav('inicio')">
@@ -53,77 +54,33 @@
                     </button>
                 </h2>
             </div>
-
             <div class="accordion-item bg-transparent border-0">
                 <h2 class="accordion-header" id="headingVentas">
                     <button class="accordion-button collapsed bg-transparent text-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseVentas">
                         <i class="bi bi-cart-check me-2"></i> Comercial
                     </button>
                 </h2>
-                <div id="collapseVentas" class="accordion-collapse collapse" data-bs-parent="#menuAccordion">
+                <div id="collapseVentas" class="accordion-collapse collapse show" data-bs-parent="#menuAccordion">
                     <div class="accordion-body p-0">
                         <ul class="list-unstyled ps-3">
-                            <li><a href="#" class="text-white-50 text-decoration-none d-block py-2" onclick="nav('ventas-arzuka')">
+                            <li><a href="#" class="text-white-50 text-decoration-none d-block py-2 active" onclick="nav('ventas-arzuka')">
                                 <i class="bi bi-shop me-2"></i> Ventas Arzuka
                             </a></li>
-                            <li><a href="#" class="text-white-50 text-decoration-none d-block py-2 text-muted">
-                                <i class="bi bi-snow2 me-2"></i> Ventas Polo Norte (Próx)
-                            </a></li>
                         </ul>
                     </div>
                 </div>
             </div>
-
-            <div class="accordion-item bg-transparent border-0">
-                <h2 class="accordion-header" id="headingLogistica">
-                    <button class="accordion-button collapsed bg-transparent text-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLogistica">
-                        <i class="bi bi-truck me-2"></i> Operaciones
-                    </button>
-                </h2>
-                <div id="collapseLogistica" class="accordion-collapse collapse" data-bs-parent="#menuAccordion">
-                    <div class="accordion-body p-0">
-                        <ul class="list-unstyled ps-3">
-                            <li><a href="#" class="text-white-50 text-decoration-none d-block py-2" onclick="nav('proveedores')">
-                                <i class="bi bi-people me-2"></i> Proveedores
-                            </a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="accordion-item bg-transparent border-0">
-                <h2 class="accordion-header" id="headingAdmin">
-                    <button class="accordion-button collapsed bg-transparent text-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdmin">
-                        <i class="bi bi-gear-fill me-2"></i> Administración
-                    </button>
-                </h2>
-                <div id="collapseAdmin" class="accordion-collapse collapse" data-bs-parent="#menuAccordion">
-                    <div class="accordion-body p-0">
-                        <ul class="list-unstyled ps-3">
-                            <li><a href="#" class="text-white-50 text-decoration-none d-block py-2" onclick="nav('usuarios')">
-                                <i class="bi bi-person-badge me-2"></i> Usuarios
-                            </a></li>
-                            <li><a href="#" class="text-white-50 text-decoration-none d-block py-2" onclick="nav('configuracion')">
-                                <i class="bi bi-sliders me-2"></i> Configuración
-                            </a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="accordion-item bg-transparent border-0 mt-3">
+             <div class="accordion-item bg-transparent border-0 mt-3">
                  <h2 class="accordion-header">
                     <button class="accordion-button collapsed bg-transparent text-danger shadow-none" type="button" onclick="cerrarSesion()">
                         <i class="bi bi-box-arrow-left me-2"></i> Cerrar Sesión
                     </button>
                 </h2>
             </div>
-
         </div>
     </nav>
 
     <div id="content">
-        
         <div class="top-bar d-md-none d-flex justify-content-between align-items-center p-3 bg-white shadow-sm">
             <span class="fw-bold text-primary">ARZUPOLO</span>
             <button class="btn btn-light border" onclick="toggleSidebar()"><i class="bi bi-list h4 m-0"></i></button>
@@ -131,20 +88,7 @@
 
         <div id="main-area">
             
-            <div id="view-inicio" class="view-section active">
-                <h2 class="mb-4">Bienvenido al ERP</h2>
-                <div class="row g-3">
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card-dashboard text-center h-100 py-4" onclick="nav('ventas-arzuka')" style="cursor:pointer;">
-                            <h1 class="text-primary mb-3"><i class="bi bi-cart-check"></i></h1>
-                            <h4>Ventas Arzuka</h4>
-                            <p class="text-muted">Gestión de Pedidos y Tickets</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="view-ventas-arzuka" class="view-section">
+            <div id="view-ventas-arzuka" class="view-section active">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2 class="m-0 text-primary"><i class="bi bi-shop"></i> Ventas Arzuka</h2>
                     <div>
@@ -174,6 +118,15 @@
                     </div>
                 </div>
 
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 fw-bold text-muted">Tendencia de Ventas (Últimos Movimientos)</h6>
+                    </div>
+                    <div class="card-body" style="height: 300px;">
+                        <canvas id="graficoVentas"></canvas>
+                    </div>
+                </div>
+
                 <div class="card shadow-sm border-0">
                     <div class="card-header bg-white py-3">
                         <h6 class="m-0 fw-bold text-muted">Últimas Transacciones</h6>
@@ -198,19 +151,6 @@
                 </div>
             </div>
 
-            <div id="view-usuarios" class="view-section">
-                <h2>Gestión de Usuarios</h2>
-                <div class="card p-4 text-center text-muted bg-light border-0 mt-3">
-                    <i class="bi bi-cone h1"></i>
-                    <p>Módulo en construcción. Usa el Admin de Apps Script por ahora.</p>
-                </div>
-            </div>
-
-            <div id="view-configuracion" class="view-section">
-                <h2>Configuración</h2>
-                <p class="text-muted">Módulo en construcción...</p>
-            </div>
-
         </div>
     </div>
 
@@ -228,16 +168,11 @@
                                 <div class="row g-2">
                                     <div class="col-md-6">
                                         <label class="small fw-bold text-muted">CLIENTE</label>
-                                        <div class="input-group">
-                                            <input type="text" id="txtClienteBuscar" class="form-control" list="listaClientes" placeholder="Buscar o escribir nuevo..." autocomplete="off">
-                                            <button class="btn btn-outline-secondary" type="button"><i class="bi bi-search"></i></button>
-                                        </div>
+                                        <input type="text" id="txtClienteBuscar" class="form-control" list="listaClientes" placeholder="Buscar o escribir nuevo..." autocomplete="off">
                                     </div>
                                     <div class="col-md-3">
                                         <label class="small fw-bold text-muted">EVENTO</label>
-                                        <select id="selTipoEvento" class="form-select">
-                                            <option value="Normal">Venta Normal</option>
-                                            </select>
+                                        <select id="selTipoEvento" class="form-select"><option value="Normal">Venta Normal</option></select>
                                     </div>
                                     <div class="col-md-3">
                                         <label class="small fw-bold text-muted">FECHA ENTREGA</label>
@@ -246,8 +181,8 @@
                                 </div>
                                 <div class="row g-2 mt-2">
                                     <div class="col-12">
-                                        <label class="small fw-bold text-muted">OBSERVACIONES / DETALLE TORTA</label>
-                                        <textarea id="txtObservaciones" class="form-control form-control-sm" rows="1" placeholder="Ej: Torta de chocolate, poner nombre 'Juan'"></textarea>
+                                        <label class="small fw-bold text-muted">OBSERVACIONES</label>
+                                        <textarea id="txtObservaciones" class="form-control form-control-sm" rows="1" placeholder="Detalles del pedido..."></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -255,7 +190,7 @@
 
                         <div class="card border-0 shadow-sm mb-3">
                             <div class="card-header bg-white d-flex justify-content-between align-items-center py-2">
-                                <span class="fw-bold text-primary small">DETALLE DE PRODUCTOS</span>
+                                <span class="fw-bold text-primary small">PRODUCTOS</span>
                                 <button type="button" class="btn btn-sm btn-primary" onclick="agregarLineaProducto()">+ Agregar Ítem</button>
                             </div>
                             <div class="card-body p-0">
@@ -269,8 +204,7 @@
                                             <th style="width: 5%"></th>
                                         </tr>
                                     </thead>
-                                    <tbody id="bodyTablaVentas">
-                                        </tbody>
+                                    <tbody id="bodyTablaVentas"></tbody>
                                 </table>
                             </div>
                             <div class="card-footer bg-white text-end">
@@ -282,7 +216,7 @@
                             <div class="col-md-6">
                                 <div class="card border-0 shadow-sm h-100">
                                     <div class="card-body">
-                                        <h6 class="fw-bold small text-muted mb-3">PAGO INICIAL</h6>
+                                        <h6 class="fw-bold small text-muted mb-3">PAGO</h6>
                                         <div class="row g-2">
                                             <div class="col-6">
                                                 <label class="small">A Cuenta (S/)</label>
@@ -290,13 +224,11 @@
                                             </div>
                                             <div class="col-6">
                                                 <label class="small">Método</label>
-                                                <select id="selMetodoPago" class="form-select">
-                                                    <option value="Efectivo">Efectivo</option>
-                                                    </select>
+                                                <select id="selMetodoPago" class="form-select"><option value="Efectivo">Efectivo</option></select>
                                             </div>
                                             <div class="col-12 pt-2">
                                                 <div class="alert alert-warning py-1 mb-0 small text-center fw-bold">
-                                                    Saldo Pendiente: S/ <span id="lblSaldoPendiente">0.00</span>
+                                                    Saldo: S/ <span id="lblSaldoPendiente">0.00</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -311,21 +243,52 @@
                                             <label class="form-check-label fw-bold small" for="chkDelivery">¿Es Delivery?</label>
                                         </div>
                                         <div id="divDelivery" class="d-none">
-                                            <input type="text" id="txtDireccion" class="form-control form-control-sm mb-2" placeholder="Dirección exacta">
-                                            <input type="text" id="txtReferencia" class="form-control form-control-sm" placeholder="Referencia / Contacto">
+                                            <input type="text" id="txtDireccion" class="form-control form-control-sm mb-2" placeholder="Dirección">
+                                            <input type="text" id="txtReferencia" class="form-control form-control-sm" placeholder="Referencia">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </form>
                 </div>
                 <div class="modal-footer border-top-0">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-success fw-bold px-4" onclick="guardarVenta()">
-                        <i class="bi bi-save"></i> REGISTRAR VENTA
+                        <i class="bi bi-save"></i> REGISTRAR
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalDetalleTicket" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title" id="lblTituloTicket">Ticket #...</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Descripción</th>
+                                    <th class="text-center">Cant.</th>
+                                    <th class="text-end">P. Unit</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bodyDetalleTicket">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="alert('Función Imprimir próximamente')"><i class="bi bi-printer"></i> Imprimir</button>
                 </div>
             </div>
         </div>
@@ -338,6 +301,7 @@
     <script src="js/config.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/core.js"></script>
-    <script src="js/ventas_arzuka.js"></script> <script src="js/usuarios.js"></script>
+    <script src="js/ventas_arzuka.js"></script>
+    <script src="js/usuarios.js"></script>
 </body>
 </html>
