@@ -1,76 +1,88 @@
 /**
  * js/auth.js
- * Maneja el inicio de sesión y la seguridad
+ * Maneja el inicio de sesión y la seguridad.
+ * Actualizado para usar la Arquitectura Unificada (callAPI).
  */
 
-// Verificar sesión al cargar cualquier página
+// 1. Verificar sesión al cargar
 document.addEventListener("DOMContentLoaded", () => {
     const usuario = JSON.parse(localStorage.getItem("erp_usuario"));
     const loginOverlay = document.getElementById("login-overlay");
 
     if (!usuario) {
-        // Si no hay usuario, mostrar Login
+        // No hay sesión: Mostrar Login y bloquear scroll
         if(loginOverlay) loginOverlay.style.display = "flex";
     } else {
-        // Si hay usuario, ocultar Login y poner nombre en sidebar
+        // Hay sesión: Ocultar Login y cargar datos usuario
         if(loginOverlay) loginOverlay.style.display = "none";
         actualizarInfoUsuario(usuario);
     }
 });
 
+// 2. Función de Login (Conecta con API_Handler)
 async function iniciarSesion() {
-    const user = document.getElementById("loginUser").value;
-    const pass = document.getElementById("loginPass").value;
+    const user = document.getElementById("loginUser").value.trim();
+    const pass = document.getElementById("loginPass").value.trim();
     const btn = document.getElementById("btnLogin");
     const errorMsg = document.getElementById("loginError");
 
+    // Validaciones básicas
+    if (!user || !pass) {
+        errorMsg.innerText = "⚠️ Ingresa usuario y contraseña";
+        return;
+    }
+
+    // UI: Bloquear botón
     btn.disabled = true;
-    btn.innerText = "Verificando...";
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Verificando...';
     errorMsg.innerText = "";
 
     try {
-        const respuesta = await fetch(Config.URL_USUARIOS, {
-            method: "POST",
-            body: JSON.stringify({ 
-                accion: "login", 
-                payload: { usuario: user, password: pass } 
-            })
+        // USAMOS callAPI (Conecta con API_Handler_ARZUKA.gs)
+        const datos = await callAPI('usuarios', 'login', { 
+            usuario: user, 
+            password: pass 
         });
-        const datos = await respuesta.json();
 
         if (datos.success) {
-            // Guardar sesión
+            // Guardar sesión en navegador
             localStorage.setItem("erp_usuario", JSON.stringify(datos.usuario));
             
-            // Verificar si debe cambiar contraseña
+            // Alerta de seguridad si es pass por defecto
             if (datos.usuario.cambiarPass) {
-                alert("⚠️ Por seguridad, debes cambiar tu contraseña predeterminada.");
-                // Aquí podrías abrir un modal de cambio de contraseña
+                alert("⚠️ Por seguridad, cambia tu contraseña pronto.");
             }
 
-            location.reload(); // Recargar para entrar
+            location.reload(); // Recargar para entrar al sistema
         } else {
             errorMsg.innerText = "❌ " + datos.error;
         }
+
     } catch (e) {
-        errorMsg.innerText = "Error de conexión: " + e.message;
+        console.error(e);
+        errorMsg.innerText = "Error de conexión. Intenta nuevamente.";
     } finally {
+        // UI: Restaurar botón
         btn.disabled = false;
-        btn.innerText = "Ingresar";
+        btn.innerText = "INGRESAR";
     }
 }
 
+// 3. Cerrar Sesión
 function cerrarSesion() {
-    if(confirm("¿Cerrar sesión?")) {
+    if(confirm("¿Seguro que deseas salir del sistema?")) {
         localStorage.removeItem("erp_usuario");
-        location.reload();
+        location.reload(); // Al recargar, el paso 1 mostrará el login
     }
 }
 
+// 4. Actualizar UI del Sidebar
 function actualizarInfoUsuario(usuario) {
     const lblUser = document.getElementById("lblUsuarioActual");
-    if(lblUser) lblUser.innerText = usuario.nombre + " (" + usuario.rol + ")";
+    if(lblUser) {
+        // Mostrar Nombre y Rol (Ej: "Juan Perez (Vendedor)")
+        lblUser.innerText = `${usuario.nombre} (${usuario.rol || 'Usuario'})`;
+    }
     
-    // Aquí aplicaremos lógica de permisos más adelante
-    // Ej: Si rol != Admin, ocultar botón de Usuarios
+    // Aquí podrías ocultar menús según el rol (Ej: ocultar Configuración si no es Admin)
 }
